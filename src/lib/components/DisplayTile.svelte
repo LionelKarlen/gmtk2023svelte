@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Allegiance } from '$lib/core/Allegiance';
-	import { Enemy, Obstacle, PlacedObstacle } from '$lib/core/Piece';
+	import { Enemy, PlacedObstacle } from '$lib/core/Piece';
 	import type Tile from '../core/Tile';
 	import { EmptyTile, OccupiedTile } from '../core/Tile';
 

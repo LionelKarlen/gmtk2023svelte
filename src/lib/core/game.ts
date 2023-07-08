@@ -6,10 +6,11 @@ import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
+import pathfind from './Pathfinding';
 
 export default class Game {
-	readonly SIZE_X = 32;
-	readonly SIZE_Y = 16;
+	static readonly SIZE_X = 32;
+	static readonly SIZE_Y = 16;
 
 	grid: Array<Tile> = [];
 	stage: Stages;
@@ -20,15 +21,16 @@ export default class Game {
 		const noise = createNoise2D(prng);
 		const enemyNumber = 5;
 		const spawnTilesX = 5;
-		const spawnTilesY = this.SIZE_Y / 4;
+		const spawnTilesY = Game.SIZE_Y / 4;
 		const likelyhoodBalance = 10;
 		let redEnemyNumber = enemyNumber;
 		let blueEnemyNumber = enemyNumber;
-		for (let y = 0; y < this.SIZE_Y; y++) {
-			for (let x = 0; x < this.SIZE_X; x++) {
+		for (let y = 0; y < Game.SIZE_Y; y++) {
+			for (let x = 0; x < Game.SIZE_X; x++) {
 				const coordinates: Coordinates = {
 					x: x,
-					y: y
+					y: y,
+					index: y * Game.SIZE_X + x
 				};
 				let tile: Tile;
 				if (noise(x, y + 20) > 0.9) {
@@ -37,16 +39,16 @@ export default class Game {
 					if (
 						x <= spawnTilesX &&
 						y >= spawnTilesY &&
-						y <= this.SIZE_Y - spawnTilesY &&
+						y <= Game.SIZE_Y - spawnTilesY &&
 						redEnemyNumber > 0 &&
 						prng() > redEnemyNumber / likelyhoodBalance
 					) {
 						redEnemyNumber -= 1;
 						tile = new OccupiedTile(coordinates, new MeleeEnemy(Allegiance.RED));
 					} else if (
-						x >= this.SIZE_X - spawnTilesX &&
+						x >= Game.SIZE_X - spawnTilesX &&
 						y >= spawnTilesY &&
-						y <= this.SIZE_Y - spawnTilesY &&
+						y <= Game.SIZE_Y - spawnTilesY &&
 						blueEnemyNumber > 0 &&
 						prng() > blueEnemyNumber / likelyhoodBalance
 					) {
@@ -59,5 +61,6 @@ export default class Game {
 				this.grid.push(tile);
 			}
 		}
+		pathfind(this.grid, { x: 0, y: 0 }, { x: 31, y: 15 });
 	}
 }
