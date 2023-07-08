@@ -79,17 +79,19 @@ export default class Game {
 		Game.grid[newTile.coordinates.index ?? -1] = newTile;
 	}
 
+	static isDead(piece: Enemy) {
+		return piece.pieceStats.health <= 0;
+	}
+
 	static handleDead(piece: Enemy) {
-		if (piece.pieceStats.health <= 0) {
-			if (piece.allegiance == 0) {
-				const index = this.blueArmy.findIndex((v) => v.piece == piece);
-				Game.updateTile(new EmptyTile(this.blueArmy[index].coordinate));
-				this.blueArmy.splice(index, 1);
-			} else {
-				const index = this.redArmy.findIndex((v) => v.piece == piece);
-				Game.updateTile(new EmptyTile(this.redArmy[index].coordinate));
-				this.redArmy.splice(index, 1);
-			}
+		if (piece.allegiance == 0) {
+			const index = this.blueArmy.findIndex((v) => v.piece == piece);
+			Game.updateTile(new EmptyTile(this.blueArmy[index].coordinate));
+			this.blueArmy.splice(index, 1);
+		} else {
+			const index = this.redArmy.findIndex((v) => v.piece == piece);
+			Game.updateTile(new EmptyTile(this.redArmy[index].coordinate));
+			this.redArmy.splice(index, 1);
 		}
 	}
 

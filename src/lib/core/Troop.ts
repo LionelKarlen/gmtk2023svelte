@@ -54,7 +54,18 @@ export default class Troop {
 						) {
 							// TODO: Add Dodge likelyhood
 							defendingPiece.pieceStats.health -= move.attacker.piece.pieceStats.damage;
-							Game.handleDead(defendingPiece);
+							if (Game.isDead(defendingPiece)) {
+								Game.handleDead(defendingPiece);
+							} else {
+								this.moveQueue.push(
+									new AttackMove(
+										move.fromCoordinate,
+										move.toCoordinate,
+										move.attacker,
+										move.defender
+									)
+								);
+							}
 							this.moveQueue.splice(0, 1);
 						}
 					}

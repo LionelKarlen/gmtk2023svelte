@@ -17,6 +17,7 @@
 		</div>
 	{/key}
 	<button
+		class="btn"
 		on:click={() => {
 			grid = game.cycleGameLoop();
 			forceRerender = !forceRerender;
