@@ -6,14 +6,14 @@ import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
-import pathfind from './Pathfinding';
 import Troop from './Troop';
+import { decide } from './General';
 
 export default class Game {
 	static readonly SIZE_X = 32;
 	static readonly SIZE_Y = 16;
 
-	grid: Array<Tile> = [];
+	static grid: Array<Tile> = [];
 	stage: Stages;
 	blueArmy: Array<Troop> = [];
 	redArmy: Array<Troop> = [];
@@ -67,22 +67,27 @@ export default class Game {
 						tile = new EmptyTile(coordinates);
 					}
 				}
-				this.grid.push(tile);
+				Game.grid.push(tile);
 			}
 		}
-		pathfind(this.grid, { x: 0, y: 0 }, { x: 31, y: 15 });
-		this.cycleGameLoop();
+	}
+
+	static updateTile(newTile: Tile) {
+		Game.grid[newTile.coordinates.index ?? -1] = newTile;
 	}
 
 	cycleGameLoop() {
 		console.log('turn', Object.values(Allegiance)[this.currentTurn]);
+		const troop = this.redArmy[decide(Game.grid, this.redArmy, this.blueArmy) ?? 0];
+		Game.grid = troop?.makeMove(Game.grid);
 		console.log('done');
 		this.nextTurn();
+		return Game.grid;
 	}
 
 	nextTurn() {
-		if(this.isGameOver()) {
-			console.log("game over")
+		if (this.isGameOver()) {
+			console.log('game over');
 		}
 		this.currentTurn = (this.currentTurn + 1) % 2;
 	}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Allegiance } from '$lib/core/Allegiance';
 	import { Enemy, PlacedObstacle } from '$lib/core/Piece';
+	import Game from '$lib/core/game';
 	import type Tile from '../core/Tile';
 	import { EmptyTile, OccupiedTile } from '../core/Tile';
 
@@ -12,6 +13,7 @@
 		} else if (tile.getPiece() instanceof PlacedObstacle) {
 			tile = new EmptyTile(tile.coordinates);
 		}
+		Game.updateTile(tile);
 	}
 
 	function getAllegiance(): Allegiance | null {
