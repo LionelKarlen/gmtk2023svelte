@@ -1,9 +1,10 @@
 import type Coordinates from './Coordinates';
 import type Move from './Move';
-import { MoveType } from './Move';
-import type { Enemy } from './Piece';
+import { MoveType, AttackMove } from './Move';
 import type Tile from './Tile';
 import { EmptyTile, OccupiedTile } from './Tile';
+import Game from './game';
+import { Enemy } from './Piece';
 export default class Troop {
 	coordinate: Coordinates;
 	piece: Enemy;
@@ -22,21 +23,41 @@ export default class Troop {
 	makeMove(grid: Array<Tile>) {
 		const move = this.moveQueue[0];
 		console.log(move);
-		if (move.moveType == MoveType.Movement) {
-			if (move.fromCoordinate.index) {
-				if (move.toCoordinate.index) {
+		if (move.fromCoordinate.index) {
+			if (move.toCoordinate.index) {
+				if (move.moveType == MoveType.Movement) {
 					if (grid[move.toCoordinate.index].isEmpty()) {
 						console.log('from');
-						grid[move.fromCoordinate.index] = new EmptyTile(move.fromCoordinate);
+						Game.updateTile(new EmptyTile(move.fromCoordinate));
 
 						console.log('to', move.toCoordinate.index);
-						grid[move.toCoordinate.index] = new OccupiedTile(move.toCoordinate, this.piece);
+						Game.updateTile(new OccupiedTile(move.toCoordinate, this.piece));
 						this.coordinate = move.toCoordinate;
+						this.moveQueue.splice(0, 1);
+					} else {
+						console.log('stuck, clearing movequeue');
+						this.moveQueue = [];
+					}
+				}
+				if (move.moveType == MoveType.Attack && move instanceof AttackMove) {
+					if (grid[move.toCoordinate.index].isEmpty()) {
+						console.log('no enemy, clearing movequeue');
+						this.moveQueue = [];
+					} else {
+						const defendingPiece = grid[move.toCoordinate.index].getPiece();
+						if (
+							defendingPiece instanceof Enemy &&
+							defendingPiece.allegiance != move.attacker.piece.allegiance
+						) {
+							// TODO: Add Dodge likelyhood
+							defendingPiece.pieceStats.health -= move.attacker.piece.pieceStats.damage;
+							Game.handleDead(defendingPiece);
+							this.moveQueue.splice(0, 1);
+						}
 					}
 				}
 			}
 		}
-		this.moveQueue.splice(0, 1);
 		return grid;
 	}
 }

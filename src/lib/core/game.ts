@@ -1,13 +1,14 @@
 import Tile, { EmptyTile } from './Tile';
 import type Coordinates from './Coordinates';
 import { OccupiedTile } from './Tile';
-import { GeneratedObstacle, MeleeEnemy } from './Piece';
+import { Enemy, GeneratedObstacle, MeleeEnemy } from './Piece';
 import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
 import Troop from './Troop';
 import { decide } from './General';
+import Piece from './Piece';
 
 export default class Game {
 	static readonly SIZE_X = 32;
@@ -15,8 +16,8 @@ export default class Game {
 
 	static grid: Array<Tile> = [];
 	stage: Stages;
-	blueArmy: Array<Troop> = [];
-	redArmy: Array<Troop> = [];
+	static blueArmy: Array<Troop> = [];
+	static redArmy: Array<Troop> = [];
 
 	public currentTurn = 0;
 
@@ -50,7 +51,7 @@ export default class Game {
 					) {
 						redEnemyNumber -= 1;
 						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.RED));
-						this.redArmy.push(troop);
+						Game.redArmy.push(troop);
 						tile = new OccupiedTile(coordinates, troop.piece);
 					} else if (
 						x >= Game.SIZE_X - spawnTilesX &&
@@ -61,7 +62,7 @@ export default class Game {
 					) {
 						blueEnemyNumber -= 1;
 						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.BLUE));
-						this.blueArmy.push(troop);
+						Game.blueArmy.push(troop);
 						tile = new OccupiedTile(coordinates, troop.piece);
 					} else {
 						tile = new EmptyTile(coordinates);
@@ -76,9 +77,19 @@ export default class Game {
 		Game.grid[newTile.coordinates.index ?? -1] = newTile;
 	}
 
+	static handleDead(piece: Enemy) {
+		if (piece.pieceStats.health <= 0) {
+			if (piece.allegiance == 0) {
+				const index = this.blueArmy.findIndex((v) => v.piece == piece);
+				Game.updateTile(new EmptyTile(this.blueArmy[index].coordinate));
+				this.blueArmy.splice(index, 1);
+			}
+		}
+	}
+
 	cycleGameLoop() {
 		console.log('turn', Object.values(Allegiance)[this.currentTurn]);
-		const troop = this.redArmy[decide(Game.grid, this.redArmy, this.blueArmy) ?? 0];
+		const troop = Game.redArmy[decide(Game.grid, Game.redArmy, Game.blueArmy) ?? 0];
 		Game.grid = troop?.makeMove(Game.grid);
 		console.log('done');
 		this.nextTurn();
@@ -93,6 +104,6 @@ export default class Game {
 	}
 
 	isGameOver() {
-		return this.redArmy.length == 0 || this.blueArmy.length == 0;
+		return Game.redArmy.length == 0 || Game.blueArmy.length == 0;
 	}
 }

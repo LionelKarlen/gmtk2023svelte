@@ -2,7 +2,7 @@ import type Move from './Move';
 import type Tile from './Tile';
 import type Troop from './Troop';
 import pathfind from './Pathfinding';
-import { MovementMove } from './Move';
+import { MovementMove, AttackMove } from './Move';
 import type Coordinates from './Coordinates';
 
 export default class General {
@@ -26,7 +26,13 @@ export function decide(grid: Array<Tile>, attackArmy: Array<Troop>, defendArmy: 
 			lastStep = step;
 			moves.push(move);
 		}
+		if (lastStep.index == defendTroop.coordinate.index) {
+			moves.pop();
+			const move = new AttackMove(lastStep, lastStep, attackTroop, defendTroop);
+			moves.push(move);
+		}
 		attackArmy[0].moveQueue.push(...moves);
+		console.log('pushing new move Queue');
 		return 0;
 	}
 

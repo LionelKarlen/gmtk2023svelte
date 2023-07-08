@@ -1,4 +1,5 @@
 import type Coordinates from './Coordinates';
+import type Troop from './Troop';
 export enum MoveType {
 	Movement,
 	Attack
@@ -18,8 +19,17 @@ export default abstract class Move {
 }
 
 export class AttackMove extends Move {
-	constructor(fromCoordinate: Coordinates, toCoordinate: Coordinates) {
+	attacker: Troop;
+	defender: Troop;
+	constructor(
+		fromCoordinate: Coordinates,
+		toCoordinate: Coordinates,
+		attacker: Troop,
+		defender: Troop
+	) {
 		super(fromCoordinate, toCoordinate, MoveType.Attack);
+		this.attacker = attacker;
+		this.defender = defender;
 	}
 }
 

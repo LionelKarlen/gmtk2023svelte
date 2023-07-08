@@ -22,7 +22,7 @@ export class MeleeEnemy extends Enemy {
 	pieceStats: PieceStats;
 	constructor(allegiance: Allegiance) {
 		super(allegiance);
-		this.pieceStats = DEFAULT_STATS;
+		this.pieceStats = structuredClone(DEFAULT_STATS);
 	}
 }
 
