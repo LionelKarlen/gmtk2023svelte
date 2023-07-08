@@ -1,4 +1,4 @@
-import type { Allegiance } from './Allegiance';
+import { Allegiance } from './Allegiance';
 import type PieceStats from './PieceStats';
 import { DEFAULT_STATS, RANGED_STATS } from './PieceStats';
 
@@ -19,6 +19,14 @@ export abstract class Enemy extends Piece {
 		this.allegiance = allegiance;
 		this.asset = '';
 		this.size = 2;
+	}
+}
+
+export class EmptyEnemy extends Enemy {
+	pieceStats: PieceStats;
+	constructor() {
+		super(Allegiance.BLUE);
+		this.pieceStats = structuredClone(DEFAULT_STATS);
 	}
 }
 
