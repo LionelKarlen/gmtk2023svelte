@@ -3,12 +3,12 @@ import type Coordinates from './Coordinates';
 import { OccupiedTile } from './Tile';
 import { Enemy, GeneratedObstacle, MeleeEnemy } from './Piece';
 import { createNoise2D } from 'simplex-noise';
-import alea from 'alea';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
 import Troop from './Troop';
-import { decide } from './General';
-import Piece from './Piece';
+import MovequeueException from './MovequeueException';
+import { alea } from 'seedrandom';
+import General from './General';
 
 export default class Game {
 	static readonly SIZE_X = 32;
@@ -16,12 +16,14 @@ export default class Game {
 
 	static grid: Array<Tile> = [];
 	stage: Stages;
+	general: General;
 	static blueArmy: Array<Troop> = [];
 	static redArmy: Array<Troop> = [];
 
 	public currentTurn = 0;
 
 	constructor(seed = 'seed') {
+		this.general = new General(seed);
 		this.stage = Stages.PLANNING;
 		const prng = alea(seed);
 		const noise = createNoise2D(prng);
@@ -83,14 +85,49 @@ export default class Game {
 				const index = this.blueArmy.findIndex((v) => v.piece == piece);
 				Game.updateTile(new EmptyTile(this.blueArmy[index].coordinate));
 				this.blueArmy.splice(index, 1);
+			} else {
+				const index = this.redArmy.findIndex((v) => v.piece == piece);
+				Game.updateTile(new EmptyTile(this.redArmy[index].coordinate));
+				this.redArmy.splice(index, 1);
+			}
+		}
+	}
+
+	getCurrentTroop(seededTroop?: Troop) {
+		if (seededTroop) {
+			const allegiance = seededTroop.piece.allegiance;
+			const troopIndex =
+				allegiance == 1
+					? Game.redArmy.findIndex((v) => v.piece == seededTroop.piece)
+					: Game.blueArmy.findIndex((v) => v.piece == seededTroop.piece);
+			return allegiance == 1
+				? Game.redArmy[this.general.decideMove(Game.grid, Game.redArmy, Game.blueArmy, troopIndex)]
+				: Game.blueArmy[
+						this.general.decideMove(Game.grid, Game.blueArmy, Game.redArmy, troopIndex)
+				  ];
+		}
+		if (this.currentTurn == 1) {
+			return Game.redArmy[this.general.decideMove(Game.grid, Game.redArmy, Game.blueArmy)];
+		}
+		return Game.blueArmy[this.general.decideMove(Game.grid, Game.blueArmy, Game.redArmy)];
+	}
+
+	getMove(seededTroop?: Troop) {
+		const troop = this.getCurrentTroop(seededTroop);
+		console.log('currentTroop', troop);
+		try {
+			Game.grid = troop?.makeMove(Game.grid);
+		} catch (error: unknown) {
+			if (error instanceof MovequeueException) {
+				console.debug('requesting new Movequeue', troop);
+				this.getMove(troop);
 			}
 		}
 	}
 
 	cycleGameLoop() {
 		console.log('turn', Object.values(Allegiance)[this.currentTurn]);
-		const troop = Game.redArmy[decide(Game.grid, Game.redArmy, Game.blueArmy) ?? 0];
-		Game.grid = troop?.makeMove(Game.grid);
+		this.getMove();
 		console.log('done');
 		this.nextTurn();
 		return Game.grid;

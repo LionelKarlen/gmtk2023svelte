@@ -5,6 +5,7 @@ import type Tile from './Tile';
 import { EmptyTile, OccupiedTile } from './Tile';
 import Game from './game';
 import { Enemy } from './Piece';
+import MovequeueException from './MovequeueException';
 export default class Troop {
 	coordinate: Coordinates;
 	piece: Enemy;
@@ -37,12 +38,14 @@ export default class Troop {
 					} else {
 						console.log('stuck, clearing movequeue');
 						this.moveQueue = [];
+						throw new MovequeueException('No Movequeue');
 					}
 				}
 				if (move.moveType == MoveType.Attack && move instanceof AttackMove) {
 					if (grid[move.toCoordinate.index].isEmpty()) {
 						console.log('no enemy, clearing movequeue');
 						this.moveQueue = [];
+						throw new MovequeueException('No Movequeue');
 					} else {
 						const defendingPiece = grid[move.toCoordinate.index].getPiece();
 						if (
