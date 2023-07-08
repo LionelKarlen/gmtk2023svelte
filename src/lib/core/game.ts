@@ -23,6 +23,7 @@ export default class Game {
 	static prng: PRNG;
 
 	public currentTurn = 0;
+	static explosionTiles: Array<[Coordinates, number]> = [];
 
 	constructor(seed = 'seed') {
 		this.general = new General(seed);
@@ -101,11 +102,15 @@ export default class Game {
 	static handleDead(piece: Enemy) {
 		if (piece.allegiance == 0) {
 			const index = this.blueArmy.findIndex((v) => v.piece == piece);
-			Game.updateTile(new ExplosionTile(this.blueArmy[index].coordinate, piece.size));
+			const coordinate = this.blueArmy[index].coordinate;
+			Game.updateTile(new ExplosionTile(coordinate, piece.size));
+			Game.explosionTiles.push([coordinate, 0]);
 			this.blueArmy.splice(index, 1);
 		} else {
 			const index = this.redArmy.findIndex((v) => v.piece == piece);
-			Game.updateTile(new ExplosionTile(this.redArmy[index].coordinate, piece.size));
+			const coordinate = this.redArmy[index].coordinate;
+			Game.updateTile(new ExplosionTile(coordinate, piece.size));
+			Game.explosionTiles.push([coordinate, 0]);
 			this.redArmy.splice(index, 1);
 		}
 	}
@@ -155,9 +160,20 @@ export default class Game {
 			console.log('game over');
 		}
 		this.currentTurn = (this.currentTurn + 1) % 2;
+		this.cleanupExplosionTiles();
 	}
 
 	isGameOver() {
 		return Game.redArmy.length == 0 || Game.blueArmy.length == 0;
+	}
+
+	cleanupExplosionTiles() {
+		const TURNS_AFTER_DEATH_SHOWN = 1;
+		for (const explosionTileData of Game.explosionTiles) {
+			explosionTileData[1] += 1;
+			if (explosionTileData[1] == TURNS_AFTER_DEATH_SHOWN + 1) {
+				Game.updateTile(new EmptyTile(explosionTileData[0]));
+			}
+		}
 	}
 }
