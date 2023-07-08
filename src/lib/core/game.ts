@@ -1,7 +1,7 @@
 import Tile, { EmptyTile } from './Tile';
 import type Coordinates from './Coordinates';
 import { OccupiedTile, ExplosionTile } from './Tile';
-import { Enemy, GeneratedObstacle, MeleeEnemy, RangedEnemy } from './Piece';
+import { Enemy, GeneratedObstacle, MeleeEnemy, RangedEnemy, ScoutEnemy, TankEnemy } from './Piece';
 import { createNoise2D } from 'simplex-noise';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
@@ -34,7 +34,9 @@ export default class Game {
 		const spawnTilesX = 5;
 		const spawnTilesY = Game.SIZE_Y / 4;
 		const likelyhoodBalance = 10;
-		const meleeLikelyhoodBalance = 0.7;
+		const meleeLikelyhoodBalance = 0.5;
+		const rangedLikelyhoodBalance = 0.5;
+		const scoutLikelyhoodBalance = 0.4;
 		let redEnemyNumber = enemyNumber;
 		let blueEnemyNumber = enemyNumber;
 		for (let y = 0; y < Game.SIZE_Y; y++) {
@@ -60,7 +62,14 @@ export default class Game {
 						if (Game.prng() > meleeLikelyhoodBalance) {
 							enemy = new MeleeEnemy(Allegiance.RED);
 						} else {
-							enemy = new RangedEnemy(Allegiance.RED);
+							const rng = Game.prng();
+							if (rng > rangedLikelyhoodBalance) {
+								enemy = new RangedEnemy(Allegiance.RED);
+							} else if (rng > scoutLikelyhoodBalance) {
+								enemy = new ScoutEnemy(Allegiance.RED);
+							} else {
+								enemy = new TankEnemy(Allegiance.RED);
+							}
 						}
 						const troop = new Troop(coordinates, enemy);
 						Game.redArmy.push(troop);
@@ -77,7 +86,14 @@ export default class Game {
 						if (Game.prng() > meleeLikelyhoodBalance) {
 							enemy = new MeleeEnemy(Allegiance.BLUE);
 						} else {
-							enemy = new RangedEnemy(Allegiance.BLUE);
+							const rng = Game.prng();
+							if (rng > rangedLikelyhoodBalance) {
+								enemy = new RangedEnemy(Allegiance.BLUE);
+							} else if (rng > scoutLikelyhoodBalance) {
+								enemy = new ScoutEnemy(Allegiance.BLUE);
+							} else {
+								enemy = new TankEnemy(Allegiance.BLUE);
+							}
 						}
 						const troop = new Troop(coordinates, enemy);
 						Game.blueArmy.push(troop);

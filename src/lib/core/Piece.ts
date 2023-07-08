@@ -1,6 +1,6 @@
 import { Allegiance } from './Allegiance';
 import type PieceStats from './PieceStats';
-import { DEFAULT_STATS, RANGED_STATS } from './PieceStats';
+import { DEFAULT_STATS, RANGED_STATS, SCOUT_STATS, TANK_STATS } from './PieceStats';
 
 export default abstract class Piece {
 	abstract isObstacle(): boolean;
@@ -47,6 +47,26 @@ export class RangedEnemy extends Enemy {
 		this.pieceStats = structuredClone(RANGED_STATS);
 		this.asset = (this.allegiance == 1 ? 'r' : 'b') + 'ranged';
 		this.size = 2;
+	}
+}
+
+export class ScoutEnemy extends Enemy {
+	pieceStats: PieceStats;
+	constructor(allegiance: Allegiance) {
+		super(allegiance);
+		this.pieceStats = structuredClone(SCOUT_STATS);
+		this.asset = (this.allegiance == 1 ? 'r' : 'b') + 'scout';
+		this.size = 1;
+	}
+}
+
+export class TankEnemy extends Enemy {
+	pieceStats: PieceStats;
+	constructor(allegiance: Allegiance) {
+		super(allegiance);
+		this.pieceStats = structuredClone(TANK_STATS);
+		this.asset = (this.allegiance == 1 ? 'r' : 'b') + 'tank';
+		this.size = 4;
 	}
 }
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EmptyEnemy, Enemy, PlacedObstacle, RangedEnemy } from '$lib/core/Piece';
+	import { EmptyEnemy, Enemy, PlacedObstacle } from '$lib/core/Piece';
 	import Game from '$lib/core/game';
 	import type Tile from '../core/Tile';
 	import { EmptyTile, ExplosionTile, OccupiedTile } from '../core/Tile';
@@ -14,14 +14,6 @@
 			tile = new EmptyTile(tile.coordinates);
 		}
 		Game.updateTile(tile);
-	}
-
-	function getHP(): string {
-		let piece = tile.getPiece();
-		if (piece instanceof Enemy) {
-			return piece.pieceStats.health.toString();
-		}
-		return '';
 	}
 
 	function getAsset(): string {
