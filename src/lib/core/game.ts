@@ -1,6 +1,6 @@
 import Tile, { EmptyTile } from './Tile';
 import type Coordinates from './Coordinates';
-import { OccupiedTile } from './Tile';
+import { OccupiedTile, ExplosionTile } from './Tile';
 import { Enemy, GeneratedObstacle, MeleeEnemy, RangedEnemy } from './Piece';
 import { createNoise2D } from 'simplex-noise';
 import { Allegiance } from './Allegiance';
@@ -101,11 +101,11 @@ export default class Game {
 	static handleDead(piece: Enemy) {
 		if (piece.allegiance == 0) {
 			const index = this.blueArmy.findIndex((v) => v.piece == piece);
-			Game.updateTile(new EmptyTile(this.blueArmy[index].coordinate));
+			Game.updateTile(new ExplosionTile(this.blueArmy[index].coordinate, piece.size));
 			this.blueArmy.splice(index, 1);
 		} else {
 			const index = this.redArmy.findIndex((v) => v.piece == piece);
-			Game.updateTile(new EmptyTile(this.redArmy[index].coordinate));
+			Game.updateTile(new ExplosionTile(this.redArmy[index].coordinate, piece.size));
 			this.redArmy.splice(index, 1);
 		}
 	}

@@ -11,10 +11,14 @@ export abstract class Enemy extends Piece {
 		return false;
 	}
 	allegiance: Allegiance;
+	asset: string;
+	size: number;
 	abstract pieceStats: PieceStats;
 	constructor(allegiance: Allegiance) {
 		super();
 		this.allegiance = allegiance;
+		this.asset = '';
+		this.size = 2;
 	}
 }
 
@@ -23,6 +27,8 @@ export class MeleeEnemy extends Enemy {
 	constructor(allegiance: Allegiance) {
 		super(allegiance);
 		this.pieceStats = structuredClone(DEFAULT_STATS);
+		this.asset = (this.allegiance == 1 ? 'r' : 'b') + 'melee';
+		this.size = 3;
 	}
 }
 
@@ -31,6 +37,8 @@ export class RangedEnemy extends Enemy {
 	constructor(allegiance: Allegiance) {
 		super(allegiance);
 		this.pieceStats = structuredClone(RANGED_STATS);
+		this.asset = (this.allegiance == 1 ? 'r' : 'b') + 'ranged';
+		this.size = 2;
 	}
 }
 

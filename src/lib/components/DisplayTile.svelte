@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Allegiance } from '$lib/core/Allegiance';
 	import { Enemy, PlacedObstacle, RangedEnemy } from '$lib/core/Piece';
 	import Game from '$lib/core/game';
 	import type Tile from '../core/Tile';
-	import { EmptyTile, OccupiedTile } from '../core/Tile';
+	import { EmptyTile, ExplosionTile, OccupiedTile } from '../core/Tile';
 
 	export let tile: Tile;
 
@@ -16,14 +15,6 @@
 		Game.updateTile(tile);
 	}
 
-	function getAllegiance(): Allegiance | null {
-		let piece = tile.getPiece();
-		if (piece instanceof Enemy) {
-			return piece.allegiance;
-		}
-		return null;
-	}
-
 	function getHP(): string {
 		let piece = tile.getPiece();
 		if (piece instanceof Enemy) {
@@ -32,10 +23,13 @@
 		return '';
 	}
 
-	function getType(): string {
+	function getAsset(): string {
 		let piece = tile.getPiece();
-		if (piece instanceof RangedEnemy) {
-			return 'x';
+		if (piece instanceof Enemy) {
+			return `background-image: url(/assets/${piece.asset}.png)`;
+		}
+		if (tile instanceof ExplosionTile) {
+			return `background-image: url(/assets/bump${tile.size}.png)`;
 		}
 		return '';
 	}
@@ -45,33 +39,28 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class="displayTile"
-	style={`width: ${100 / 32}%`}
+	style={`width: ${100 / 32}%;${getAsset()}`}
 	class:black={tile.getPiece()?.isObstacle()}
 	class:yellow={tile.getPiece() instanceof PlacedObstacle}
-	class:blue={getAllegiance() == Allegiance.BLUE}
-	class:red={getAllegiance() == Allegiance.RED}
 	on:click={handleClick}
 >
-	{getHP()}{getType()}
+	{getHP()}
 </div>
 
 <style>
 	.displayTile {
 		aspect-ratio: 1;
 		border: 1px black solid;
-		color: white;
+		color: black;
 		font-size: 10px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		image-rendering: pixelated;
 	}
 	.black {
-		background-color: black;
+		background-image: url(/assets/block1.png);
 	}
 	.yellow {
-		background-color: yellow;
-	}
-	.blue {
-		background-color: blue;
-	}
-	.red {
-		background-color: red;
+		background-image: url(/assets/block2.png);
 	}
 </style>

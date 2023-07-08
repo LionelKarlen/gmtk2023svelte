@@ -40,3 +40,17 @@ export class OccupiedTile extends Tile {
 		return this.piece;
 	}
 }
+
+export class ExplosionTile extends Tile {
+	isEmpty(): boolean {
+		return true;
+	}
+	getPiece(): null {
+		return null;
+	}
+	size: number;
+	constructor(coordinates: Coordinates, size: number) {
+		super(coordinates);
+		this.size = size;
+	}
+}
