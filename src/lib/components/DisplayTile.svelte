@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Obstacle, PlacedObstacle } from '$lib/core/Piece';
+	import { Allegiance } from '$lib/core/Allegiance';
+	import { Enemy, Obstacle, PlacedObstacle } from '$lib/core/Piece';
 	import type Tile from '../core/Tile';
 	import { EmptyTile, OccupiedTile } from '../core/Tile';
 
@@ -12,6 +13,14 @@
 			tile = new EmptyTile(tile.coordinates);
 		}
 	}
+
+	function getAllegiance(): Allegiance | null {
+		let piece = tile.getPiece();
+		if (piece instanceof Enemy) {
+			return piece.allegiance;
+		}
+		return null;
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -21,6 +30,8 @@
 	style={`width: ${100 / 32}%`}
 	class:black={tile.getPiece()?.isObstacle()}
 	class:yellow={tile.getPiece() instanceof PlacedObstacle}
+	class:blue={getAllegiance() == Allegiance.BLUE}
+	class:red={getAllegiance() == Allegiance.RED}
 	on:click={handleClick}
 >
 	{''}
@@ -36,5 +47,11 @@
 	}
 	.yellow {
 		background-color: yellow;
+	}
+	.blue {
+		background-color: blue;
+	}
+	.red {
+		background-color: red;
 	}
 </style>
