@@ -1,7 +1,7 @@
 import Tile, { EmptyTile } from './Tile';
 import type Coordinates from './Coordinates';
 import { OccupiedTile } from './Tile';
-import { Enemy, GeneratedObstacle, MeleeEnemy } from './Piece';
+import { Enemy, GeneratedObstacle, MeleeEnemy, RangedEnemy } from './Piece';
 import { createNoise2D } from 'simplex-noise';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
@@ -31,6 +31,7 @@ export default class Game {
 		const spawnTilesX = 5;
 		const spawnTilesY = Game.SIZE_Y / 4;
 		const likelyhoodBalance = 10;
+		const meleeLikelyhoodBalance = 0.7;
 		let redEnemyNumber = enemyNumber;
 		let blueEnemyNumber = enemyNumber;
 		for (let y = 0; y < Game.SIZE_Y; y++) {
@@ -52,7 +53,13 @@ export default class Game {
 						prng() > redEnemyNumber / likelyhoodBalance
 					) {
 						redEnemyNumber -= 1;
-						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.RED));
+						let enemy: Enemy;
+						if (prng() > meleeLikelyhoodBalance) {
+							enemy = new MeleeEnemy(Allegiance.RED);
+						} else {
+							enemy = new RangedEnemy(Allegiance.RED);
+						}
+						const troop = new Troop(coordinates, enemy);
 						Game.redArmy.push(troop);
 						tile = new OccupiedTile(coordinates, troop.piece);
 					} else if (
@@ -63,7 +70,13 @@ export default class Game {
 						prng() > blueEnemyNumber / likelyhoodBalance
 					) {
 						blueEnemyNumber -= 1;
-						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.BLUE));
+						let enemy: Enemy;
+						if (prng() > meleeLikelyhoodBalance) {
+							enemy = new MeleeEnemy(Allegiance.BLUE);
+						} else {
+							enemy = new RangedEnemy(Allegiance.BLUE);
+						}
+						const troop = new Troop(coordinates, enemy);
 						Game.blueArmy.push(troop);
 						tile = new OccupiedTile(coordinates, troop.piece);
 					} else {

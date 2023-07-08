@@ -35,10 +35,10 @@ export default class General {
 		defendArmy: Array<Troop>,
 		seededAttackTroopIndex?: number
 	) {
-		const attackTroopIndex = seededAttackTroopIndex ?? Math.floor((attackArmy.length-1) * this.prng());
+		const attackTroopIndex =
+			seededAttackTroopIndex ?? Math.floor((attackArmy.length - 1) * this.prng());
 		console.log('attackTroopIndex', attackTroopIndex);
 		const attackTroop = attackArmy[attackTroopIndex];
-		// const defendTroop = defendArmy[defendTroopIndex];
 		const defendTroop = this.findBestEnemy(grid, attackTroop, defendArmy);
 		if (!attackTroop.isProcessing()) {
 			const path = pathfind(grid, attackTroop.coordinate, defendTroop.coordinate);
@@ -51,8 +51,9 @@ export default class General {
 				moves.push(move);
 			}
 			if (lastStep.index == defendTroop.coordinate.index) {
-				moves.pop();
-				const move = new AttackMove(lastStep, lastStep, attackTroop, defendTroop);
+				const range = attackTroop.piece.pieceStats.attackRange;
+				moves.splice(moves.length - range, range);
+				const move = new AttackMove(attackTroop.coordinate, lastStep, attackTroop, defendTroop);
 				moves.push(move);
 			}
 			attackArmy[attackTroopIndex].moveQueue.push(...moves);

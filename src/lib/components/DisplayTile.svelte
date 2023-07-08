@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Allegiance } from '$lib/core/Allegiance';
-	import { Enemy, PlacedObstacle } from '$lib/core/Piece';
+	import { Enemy, PlacedObstacle, RangedEnemy } from '$lib/core/Piece';
 	import Game from '$lib/core/game';
 	import type Tile from '../core/Tile';
 	import { EmptyTile, OccupiedTile } from '../core/Tile';
@@ -31,6 +31,14 @@
 		}
 		return '';
 	}
+
+	function getType(): string {
+		let piece = tile.getPiece();
+		if (piece instanceof RangedEnemy) {
+			return 'x';
+		}
+		return '';
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -44,7 +52,7 @@
 	class:red={getAllegiance() == Allegiance.RED}
 	on:click={handleClick}
 >
-	{getHP()}
+	{getHP()}{getType()}
 </div>
 
 <style>

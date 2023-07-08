@@ -1,6 +1,6 @@
 import type { Allegiance } from './Allegiance';
 import type PieceStats from './PieceStats';
-import { DEFAULT_STATS } from './PieceStats';
+import { DEFAULT_STATS, RANGED_STATS } from './PieceStats';
 
 export default abstract class Piece {
 	abstract isObstacle(): boolean;
@@ -23,6 +23,14 @@ export class MeleeEnemy extends Enemy {
 	constructor(allegiance: Allegiance) {
 		super(allegiance);
 		this.pieceStats = structuredClone(DEFAULT_STATS);
+	}
+}
+
+export class RangedEnemy extends Enemy {
+	pieceStats: PieceStats;
+	constructor(allegiance: Allegiance) {
+		super(allegiance);
+		this.pieceStats = structuredClone(RANGED_STATS);
 	}
 }
 
