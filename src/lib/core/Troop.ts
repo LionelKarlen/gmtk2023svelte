@@ -52,8 +52,11 @@ export default class Troop {
 							defendingPiece instanceof Enemy &&
 							defendingPiece.allegiance != move.attacker.piece.allegiance
 						) {
-							// TODO: Add Dodge likelyhood
-							defendingPiece.pieceStats.health -= move.attacker.piece.pieceStats.damage;
+							if (Game.prng() > defendingPiece.pieceStats.movement) {
+								defendingPiece.pieceStats.health -= move.attacker.piece.pieceStats.damage;
+							} else {
+								console.info('DODGED');
+							}
 							if (Game.isDead(defendingPiece)) {
 								Game.handleDead(defendingPiece);
 							} else {

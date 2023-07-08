@@ -7,7 +7,7 @@ import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
 import Troop from './Troop';
 import MovequeueException from './MovequeueException';
-import { alea } from 'seedrandom';
+import { alea, type PRNG } from 'seedrandom';
 import General from './General';
 
 export default class Game {
@@ -20,13 +20,15 @@ export default class Game {
 	static blueArmy: Array<Troop> = [];
 	static redArmy: Array<Troop> = [];
 
+	static prng: PRNG;
+
 	public currentTurn = 0;
 
 	constructor(seed = 'seed') {
 		this.general = new General(seed);
 		this.stage = Stages.PLANNING;
-		const prng = alea(seed);
-		const noise = createNoise2D(prng);
+		Game.prng = alea(seed);
+		const noise = createNoise2D(Game.prng);
 		const enemyNumber = 5;
 		const spawnTilesX = 5;
 		const spawnTilesY = Game.SIZE_Y / 4;
@@ -50,11 +52,11 @@ export default class Game {
 						y >= spawnTilesY &&
 						y <= Game.SIZE_Y - spawnTilesY &&
 						redEnemyNumber > 0 &&
-						prng() > redEnemyNumber / likelyhoodBalance
+						Game.prng() > redEnemyNumber / likelyhoodBalance
 					) {
 						redEnemyNumber -= 1;
 						let enemy: Enemy;
-						if (prng() > meleeLikelyhoodBalance) {
+						if (Game.prng() > meleeLikelyhoodBalance) {
 							enemy = new MeleeEnemy(Allegiance.RED);
 						} else {
 							enemy = new RangedEnemy(Allegiance.RED);
@@ -67,11 +69,11 @@ export default class Game {
 						y >= spawnTilesY &&
 						y <= Game.SIZE_Y - spawnTilesY &&
 						blueEnemyNumber > 0 &&
-						prng() > blueEnemyNumber / likelyhoodBalance
+						Game.prng() > blueEnemyNumber / likelyhoodBalance
 					) {
 						blueEnemyNumber -= 1;
 						let enemy: Enemy;
-						if (prng() > meleeLikelyhoodBalance) {
+						if (Game.prng() > meleeLikelyhoodBalance) {
 							enemy = new MeleeEnemy(Allegiance.BLUE);
 						} else {
 							enemy = new RangedEnemy(Allegiance.BLUE);

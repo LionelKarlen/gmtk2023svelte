@@ -8,13 +8,13 @@ export default interface PieceStats {
 export const DEFAULT_STATS: PieceStats = {
 	health: 100,
 	damage: 20,
-	movement: 3,
+	movement: 0.2,
 	attackRange: 1
 };
 
 export const RANGED_STATS: PieceStats = {
 	health: 50,
 	damage: 20,
-	movement: 5,
+	movement: 0.4,
 	attackRange: 3
 };
