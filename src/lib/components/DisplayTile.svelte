@@ -21,6 +21,14 @@
 		}
 		return null;
 	}
+
+	function getHP(): string {
+		let piece = tile.getPiece();
+		if (piece instanceof Enemy) {
+			return piece.pieceStats.health.toString();
+		}
+		return '';
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -34,13 +42,15 @@
 	class:red={getAllegiance() == Allegiance.RED}
 	on:click={handleClick}
 >
-	{''}
+	{getHP()}
 </div>
 
 <style>
 	.displayTile {
 		aspect-ratio: 1;
 		border: 1px black solid;
+		color: white;
+		font-size: 10px;
 	}
 	.black {
 		background-color: black;

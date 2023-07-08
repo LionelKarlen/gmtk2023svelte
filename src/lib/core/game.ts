@@ -7,6 +7,7 @@ import alea from 'alea';
 import { Allegiance } from './Allegiance';
 import { Stages } from './Stage';
 import pathfind from './Pathfinding';
+import Troop from './Troop';
 
 export default class Game {
 	static readonly SIZE_X = 32;
@@ -14,6 +15,10 @@ export default class Game {
 
 	grid: Array<Tile> = [];
 	stage: Stages;
+	blueArmy: Array<Troop> = [];
+	redArmy: Array<Troop> = [];
+
+	public currentTurn = 0;
 
 	constructor(seed = 'seed') {
 		this.stage = Stages.PLANNING;
@@ -44,7 +49,9 @@ export default class Game {
 						prng() > redEnemyNumber / likelyhoodBalance
 					) {
 						redEnemyNumber -= 1;
-						tile = new OccupiedTile(coordinates, new MeleeEnemy(Allegiance.RED));
+						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.RED));
+						this.redArmy.push(troop);
+						tile = new OccupiedTile(coordinates, troop.piece);
 					} else if (
 						x >= Game.SIZE_X - spawnTilesX &&
 						y >= spawnTilesY &&
@@ -53,7 +60,9 @@ export default class Game {
 						prng() > blueEnemyNumber / likelyhoodBalance
 					) {
 						blueEnemyNumber -= 1;
-						tile = new OccupiedTile(coordinates, new MeleeEnemy(Allegiance.BLUE));
+						const troop = new Troop(coordinates, new MeleeEnemy(Allegiance.BLUE));
+						this.blueArmy.push(troop);
+						tile = new OccupiedTile(coordinates, troop.piece);
 					} else {
 						tile = new EmptyTile(coordinates);
 					}
@@ -62,5 +71,23 @@ export default class Game {
 			}
 		}
 		pathfind(this.grid, { x: 0, y: 0 }, { x: 31, y: 15 });
+		this.cycleGameLoop();
+	}
+
+	cycleGameLoop() {
+		console.log('turn', Object.values(Allegiance)[this.currentTurn]);
+		console.log('done');
+		this.nextTurn();
+	}
+
+	nextTurn() {
+		if(this.isGameOver()) {
+			console.log("game over")
+		}
+		this.currentTurn = (this.currentTurn + 1) % 2;
+	}
+
+	isGameOver() {
+		return this.redArmy.length == 0 || this.blueArmy.length == 0;
 	}
 }

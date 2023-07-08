@@ -3,3 +3,10 @@ export default interface PieceStats {
 	damage: number,
 	movement: number,
 }
+
+
+export const DEFAULT_STATS: PieceStats = {
+	health: 100,
+	damage: 20,
+	movement: 3
+}

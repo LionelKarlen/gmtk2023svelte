@@ -5,10 +5,11 @@
 	let game = new Game();
 </script>
 
-<div class="game flex justify-center">
+<div class="game flex justify-center flex-col items-center">
 	<div class="container flex flex-row flex-wrap w-full">
 		{#each game.grid as tile}
 			<DisplayTile {tile} />
 		{/each}
 	</div>
+	<button on:click={() => game.cycleGameLoop()}> Next turn </button>
 </div>
