@@ -37,4 +37,16 @@
 			}}
 		/>
 	</div>
+	<div class="topControl flex flex-row justify-around">
+		<FancyButton assetName="MenuReturnGameplay" on:click={() => goto('/')} />
+	</div>
 </div>
+
+<style>
+
+.topControl {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+}
+</style>

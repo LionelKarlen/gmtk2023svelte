@@ -23,7 +23,7 @@
 		<FancyButton
 			assetName={'MenuReturn'}
 			on:click={async () => {
-				await goto('/');
+				await goto('/levels');
 				location.reload();
 			}}
 		/>

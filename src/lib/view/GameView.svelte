@@ -53,7 +53,7 @@
 			/>
 		</div>
 		<div class="topControl flex flex-row justify-around">
-			<FancyButton assetName="MenuReturnGameplay" on:click={() => goto('/')} />
+			<FancyButton assetName="MenuReturnGameplay" on:click={() => goto('/levels')} />
 			<FancyButton
 				assetName="Next"
 				on:click={() => {
@@ -65,7 +65,7 @@
 	</div>
 {/if}
 
-<style>
+<style global>
 	.game {
 		width: 85%;
 		max-width: 850px;
@@ -80,6 +80,6 @@
 	.topControl {
 		position: absolute;
 		top: 10%;
-		width: 100%;
+		left: 10%;
 	}
 </style>
