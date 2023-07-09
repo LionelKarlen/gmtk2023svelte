@@ -52,7 +52,11 @@ export default class General {
 			}
 			if (lastStep.index == defendTroop.coordinate.index) {
 				const range = attackTroop.piece.pieceStats.attackRange;
-				moves.splice(moves.length - range, range);
+				if (moves.length > range + 2) {
+					moves.splice(moves.length - range, range);
+				} else {
+					moves.pop();
+				}
 				const move = new AttackMove(attackTroop.coordinate, lastStep, attackTroop, defendTroop);
 				moves.push(move);
 			}

@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import FancyButton from '$lib/components/FancyButton.svelte';
 </script>
 
@@ -9,7 +10,12 @@
 	<div class="flex flex-col">
 		<div class="flex flex-row">
 			{#each { length: 5 } as item, i}
-				<FancyButton assetName={'LVL' + (i + 1).toString()} />
+				<FancyButton
+					assetName={'LVL' + (i + 1).toString()}
+					on:click={() => {
+						goto('/game/' + (i + 1), { replaceState: true, invalidateAll: true });
+					}}
+				/>
 			{/each}
 		</div>
 		<div class="flex flex-row">

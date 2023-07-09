@@ -24,15 +24,13 @@ export default class Troop {
 	makeMove(grid: Array<Tile>) {
 		for (let index = 0; index < this.piece.pieceStats.movement; index++) {
 			const move = this.moveQueue[0];
-			console.log(move);
 			if (move.fromCoordinate.index) {
 				if (move.toCoordinate.index) {
 					if (move.moveType == MoveType.Movement) {
+						
 						if (grid[move.toCoordinate.index].isEmpty()) {
-							console.log('from');
 							Game.updateTile(new EmptyTile(move.fromCoordinate));
 
-							console.log('to', move.toCoordinate.index);
 							Game.updateTile(new OccupiedTile(move.toCoordinate, this.piece));
 							this.coordinate = move.toCoordinate;
 							this.moveQueue.splice(0, 1);

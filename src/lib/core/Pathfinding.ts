@@ -44,6 +44,5 @@ export function gridToMatrix(grid: Array<Tile>, from: Coordinates, to: Coordinat
 		}
 		matrix.push(xRow);
 	}
-	// console.log(matrix);
 	return matrix;
 }

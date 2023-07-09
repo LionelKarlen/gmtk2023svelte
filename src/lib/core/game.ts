@@ -15,7 +15,7 @@ export default class Game {
 	static readonly SIZE_Y = 8;
 
 	static grid: Array<Tile> = [];
-	stage: Stages;
+	stage: Stages = Stages.SETUP;
 	general: General;
 	static blueArmy: Array<Troop> = [];
 	static redArmy: Array<Troop> = [];
@@ -27,7 +27,6 @@ export default class Game {
 
 	constructor(seed = 'seed') {
 		this.general = new General(seed);
-		this.stage = Stages.PLANNING;
 		Game.prng = alea(seed);
 		const noise = createNoise2D(Game.prng);
 		const enemyNumber = 5;
@@ -105,6 +104,7 @@ export default class Game {
 				Game.grid.push(tile);
 			}
 		}
+		this.stage = Stages.READY;
 	}
 
 	static updateTile(newTile: Tile) {
@@ -150,15 +150,20 @@ export default class Game {
 		return Game.blueArmy[this.general.decideMove(Game.grid, Game.blueArmy, Game.redArmy)];
 	}
 
-	getMove(seededTroop?: Troop) {
+	getMove(seededTroop?: Troop, recursion?: number) {
 		const troop = this.getCurrentTroop(seededTroop);
-		console.log('currentTroop', troop);
+		let repeat = recursion ?? 1;
+		repeat += 1;
+		if (repeat == 3) {
+			console.error('RECURSION MAX REACHED YOU IDIOT DONT EVEN KNOW WHY THIS HAPPENS');
+			return;
+		}
 		try {
 			Game.grid = troop?.makeMove(Game.grid);
 		} catch (error: unknown) {
 			if (error instanceof MovequeueException) {
 				console.debug('requesting new Movequeue', troop);
-				this.getMove(troop);
+				this.getMove(troop, repeat);
 			}
 		}
 	}
