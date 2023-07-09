@@ -54,14 +54,11 @@
 		</div>
 		<div class="topControl flex flex-row justify-around">
 			<FancyButton assetName="MenuReturnGameplay" on:click={() => goto('/levels')} />
-			<FancyButton
-				assetName="Next"
-				on:click={() => {
-					refresh = false;
-					dispatch('gameover', 'blue');
-				}}
-			/>
 		</div>
+
+		<audio autoplay loop volume="0.3">
+			<source src="/assets/music/shit_going_down.mp3" type="audio/mpeg" />
+		</audio>
 	</div>
 {/if}
 

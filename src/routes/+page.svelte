@@ -11,33 +11,28 @@
 			goto('/levels');
 		}}
 	/>
-	
+
 	<FancyButton
 		assetName="CREDITS"
 		on:click={() => {
 			goto('/credits');
 		}}
 	/>
-	
 
 	<div class="topControl flex flex-row justify-around">
 		<FancyButton
-		assetName="gamestart"
-		on:click={() => {
-			goto('/tutorial');
-		}}
-	/>
+			assetName="tut"
+			on:click={() => {
+				goto('/tutorial');
+			}}
+		/>
 	</div>
-
-	
 </div>
 
-
 <style>
-
-.topControl {
-	position: absolute;
-	top: 10%;
-	right: 10%;
-}
+	.topControl {
+		position: absolute;
+		top: 10%;
+		right: 10%;
+	}
 </style>
