@@ -1,5 +1,6 @@
 <script>
 	import '../app.postcss';
+	import './body.css';
 </script>
 
 <div class="flex justify-center background h-screen w-screen">

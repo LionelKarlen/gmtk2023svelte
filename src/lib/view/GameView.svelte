@@ -2,12 +2,15 @@
 	import { goto } from '$app/navigation';
 	import FancyButton from '$lib/components/FancyButton.svelte';
 	import { Stages } from '$lib/core/Stage';
-	import { onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import DisplayTile from '../../lib/components/DisplayTile.svelte';
 	import Game from '../../lib/core/game';
 
 	export let seed: string;
+
+	const dispatch = createEventDispatcher();
 	let game: Game | null;
+	let refresh = true;
 	onMount(() => {
 		console.log('mount');
 		game = new Game(seed);
@@ -15,7 +18,9 @@
 	onDestroy(() => {
 		console.log('destroy');
 		game = null;
-		location.reload();
+		if (refresh) {
+			location.reload();
+		}
 	});
 	let forceRerender = false;
 </script>
@@ -37,6 +42,11 @@
 				on:click={() => {
 					if (game) {
 						game.cycleGameLoop();
+						let gameover = game.isGameOver();
+						if (gameover) {
+							console.log(gameover);
+							dispatch('gameover', gameover);
+						}
 						forceRerender = !forceRerender;
 					}
 				}}
@@ -44,7 +54,13 @@
 		</div>
 		<div class="topControl flex flex-row justify-around">
 			<FancyButton assetName="MenuReturnGameplay" on:click={() => goto('/')} />
-			<FancyButton assetName="Next" />
+			<FancyButton
+				assetName="Next"
+				on:click={() => {
+					refresh = false;
+					dispatch('gameover', 'blue');
+				}}
+			/>
 		</div>
 	</div>
 {/if}

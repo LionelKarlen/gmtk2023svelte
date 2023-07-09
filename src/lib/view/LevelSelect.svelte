@@ -20,11 +20,21 @@
 		</div>
 		<div class="flex flex-row">
 			{#each { length: 5 } as item, i}
-				<FancyButton assetName={'LVL' + (i + 6).toString()} />
+				<FancyButton
+					assetName={'LVL' + (i + 6).toString()}
+					on:click={() => {
+						goto('/game/' + (i + 6), { replaceState: true, invalidateAll: true });
+					}}
+				/>
 			{/each}
 		</div>
 	</div>
 	<div class="flex flex-row">
-		<FancyButton assetName={'infinite'} />
+		<FancyButton
+			assetName={'infinite'}
+			on:click={() => {
+				goto('/game/' + Date.now(), { replaceState: true, invalidateAll: true });
+			}}
+		/>
 	</div>
 </div>

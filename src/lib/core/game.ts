@@ -185,7 +185,10 @@ export default class Game {
 	}
 
 	isGameOver() {
-		return Game.redArmy.length == 0 || Game.blueArmy.length == 0;
+		if (Game.redArmy.length == 0 || Game.blueArmy.length == 0) {
+			return Game.blueArmy.length > Game.redArmy.length ? 'blue' : 'red';
+		}
+		return null;
 	}
 
 	cleanupExplosionTiles() {
