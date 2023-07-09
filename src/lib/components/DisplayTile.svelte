@@ -19,10 +19,10 @@
 	function getAsset(): string {
 		let piece = tile.getPiece();
 		if (piece instanceof Enemy) {
-			return `background-image: url(/assets/${piece.asset}.png)`;
+			return `background-image: url(/assets/game/${piece.asset}.png)`;
 		}
 		if (tile instanceof ExplosionTile) {
-			return `background-image: url(/assets/bump${tile.size}.png)`;
+			return `background-image: url(/assets/game/bump${tile.size}.png)`;
 		}
 		return '';
 	}
@@ -39,7 +39,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class="displayTile"
-	style={`width: ${100 / 32}%;${getAsset()}`}
+	style={`width: ${100 / Game.SIZE_X}%;${getAsset()}`}
 	class:black={tile.getPiece()?.isObstacle()}
 	class:yellow={tile.getPiece() instanceof PlacedObstacle}
 	on:click={handleClick}
@@ -61,7 +61,7 @@
 	}
 	.displayTile {
 		aspect-ratio: 1;
-		border: 1px black solid;
+		/* border: 1px black solid; */
 		color: black;
 		font-size: 10px;
 		background-repeat: no-repeat;
@@ -69,9 +69,9 @@
 		image-rendering: pixelated;
 	}
 	.black {
-		background-image: url(/assets/block1.png);
+		background-image: url(/assets/game/block1.png);
 	}
 	.yellow {
-		background-image: url(/assets/block2.png);
+		background-image: url(/assets/game/block2.png);
 	}
 </style>

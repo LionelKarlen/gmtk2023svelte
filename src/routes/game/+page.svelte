@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Layout from '../+layout.svelte';
 	import DisplayTile from '../../lib/components/DisplayTile.svelte';
 	import Game from '../../lib/core/game';
 
@@ -8,15 +7,15 @@
 	let forceRerender = false;
 </script>
 
-<div class="game flex justify-center flex-col items-center">
+<div class="game flex justify-center flex-col items-center h-full">
 	{#key forceRerender}
-		<div class="container flex flex-row flex-wrap w-full">
+		<div class="flex flex-row flex-wrap w-full board">
 			{#each grid as tile}
 				<DisplayTile {tile} />
 			{/each}
 		</div>
 	{/key}
-	<button
+	<!-- <button
 		class="btn"
 		on:click={() => {
 			grid = game.cycleGameLoop();
@@ -24,5 +23,15 @@
 		}}
 	>
 		Next turn
-	</button>
+	</button> -->
 </div>
+
+<style>
+	.game {
+		width: 85%;
+		max-width: 850px;
+	}
+	.board {
+		max-height: 70vh;
+	}
+</style>

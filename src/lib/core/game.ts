@@ -11,8 +11,8 @@ import { alea, type PRNG } from 'seedrandom';
 import General from './General';
 
 export default class Game {
-	static readonly SIZE_X = 32;
-	static readonly SIZE_Y = 16;
+	static readonly SIZE_X = 17;
+	static readonly SIZE_Y = 8;
 
 	static grid: Array<Tile> = [];
 	stage: Stages;

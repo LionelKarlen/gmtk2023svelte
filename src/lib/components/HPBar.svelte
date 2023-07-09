@@ -5,10 +5,10 @@
 	let color = enemy.allegiance == 1 ? 'r' : 'b';
 </script>
 
-<div class="hp outside" style={`background-image: url(/assets/${color}empty.png)`}>
+<div class="hp outside" style={`background-image: url(/assets/game/${color}empty.png)`}>
 	<div
 		class="hp inside"
-		style={`background-image: url(/assets/${color}full.png); transform: scaleX(${
+		style={`background-image: url(/assets/game/${color}full.png); transform: scaleX(${
 			enemy.pieceStats.health / enemy.pieceStats.maxHealth
 		});`}
 	/>
