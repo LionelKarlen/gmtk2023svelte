@@ -17,14 +17,14 @@
 		<FancyButton
 			assetName={'Retry'}
 			on:click={() => {
-				location.reload();
+				dispatch("retry");
 			}}
 		/>
 		<FancyButton
 			assetName={'MenuReturn'}
 			on:click={async () => {
 				await goto('/levels');
-				location.reload();
+				// location.reload();
 			}}
 		/>
 		<FancyButton

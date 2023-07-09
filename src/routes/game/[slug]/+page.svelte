@@ -22,7 +22,10 @@
 			won={winner == 'red'}
 			on:nextLevel={async () => {
 				await goto('/game/' + (Number.parseInt(data.slug) + 1), { replaceState: true });
-				location.reload();
+				gameover = false;
+			}}
+			on:retry={() => {
+				gameover = false;
 			}}
 		/>
 	{/if}

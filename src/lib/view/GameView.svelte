@@ -13,13 +13,16 @@
 	let refresh = true;
 	onMount(() => {
 		console.log('mount');
+		Game.blueArmy=[];
+		Game.redArmy=[];
+		Game.grid=[];
 		game = new Game(seed);
 	});
 	onDestroy(() => {
 		console.log('destroy');
 		game = null;
 		if (refresh) {
-			location.reload();
+			// location.reload();
 		}
 	});
 	let forceRerender = false;
